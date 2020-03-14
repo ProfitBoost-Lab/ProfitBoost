@@ -10,10 +10,9 @@ source('../R-original/campaignprofitlift.r')
 source('../R-original/targetsizeoptimization.r')
 source('../R-original/campaignevaluation.r')
 source('../R-original/fixedsizecampaignevaluation.r')
-source('../R-original/verbeke.r')
-source('../R-original/gini.r')
-source('../R-original/top.r')
 source('../R-original/overlapperdecile.r')
+
+source('../R/functions_utility.R')
 
 #-----------#
 # load data #
@@ -26,6 +25,8 @@ source('../R-original/overlapperdecile.r')
 
 load('../data/mysynthdata.Rdata', verbose = T)
 
+mysynthdata <- mysynthdata[1:200,]  ########## RVE temp --- delete this again
+
 # data specification
 colnumbers.covariates = 2:12  # indicates the position of all predictors excluding w (excludes w, y and revenues)
 pos.covariates = 1:12 # indicates the position (column number) of all predictors including w (excludes w, y and revenues)
@@ -37,13 +38,13 @@ budget = 1000 # budget to determine target size using budget constaint
 buffer = .10 # add buffer of 10% to optimized target size
 
 # hyperparameters for the SGB algoritm
-maxiter = 3000
-miniter = 1500
+maxiter = 200  ## RVE change back to 3000
+miniter = 200  ## RVE change back to 1500
 rho = .001
 stoch = TRUE
 ratio = .3
 
-B = 2 # change this number to get multiple iterations
+B = 1 # change this number to get multiple iterations  ### RVE change back to 2
 
 holdoutprofit = array(NA,c(B,6)) # Holdout profit for all methods, including symmetric, left and right weighting (for Table 1)
 fixedsize.churn = fixedsize.budget = optsize.verbeke = optsize.buffer = array(NA,c(B,1)) # Holdout profit for alternative target size selections (for Table 2)

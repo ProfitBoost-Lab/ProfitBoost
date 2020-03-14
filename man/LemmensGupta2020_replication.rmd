@@ -14,7 +14,7 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 
 # if one wants to re-run the code:
-##source('main.r')
+##source('demo/main_demo.R')
 
 # if one only wants to print the results of the code that already ran
 load('results.Rdata', verbose = T)

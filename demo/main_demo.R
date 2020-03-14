@@ -2,29 +2,29 @@
 # Main running script (MAIN)  #
 #=============================#
 
-source('create_3samples.r')
-source('procedure_lift_model.r')
-source('procedure_wsgb_model.r') 
-source('SGBwithuserdefinedlossfunction.R')
-source('campaignprofitlift.r')
-source('targetsizeoptimization.r')
-source('campaignevaluation.r')
-source('fixedsizecampaignevaluation.r')
-source('verbeke.r')
-source('gini.r')
-source('top.r')
-source('overlapperdecile.r')
+source('../R-original/create_3samples.r')
+source('../R-original/procedure_lift_model.r')
+source('../R-original/procedure_wsgb_model.r')
+source('../R-original/SGBwithuserdefinedlossfunction.R')
+source('../R-original/campaignprofitlift.r')
+source('../R-original/targetsizeoptimization.r')
+source('../R-original/campaignevaluation.r')
+source('../R-original/fixedsizecampaignevaluation.r')
+source('../R-original/verbeke.r')
+source('../R-original/gini.r')
+source('../R-original/top.r')
+source('../R-original/overlapperdecile.r')
 
 #-----------#
 # load data #
 #-----------#
 
 # variable names:
-# y = post-intervention churn 
+# y = post-intervention churn
 # w = treated or not
-# revenues = post-intervention cash flow 
+# revenues = post-intervention cash flow
 
-load('mysynthdata.Rdata', verbose = T)
+load('../data/mysynthdata.Rdata', verbose = T)
 
 # data specification
 colnumbers.covariates = 2:12  # indicates the position of all predictors excluding w (excludes w, y and revenues)
@@ -39,7 +39,7 @@ buffer = .10 # add buffer of 10% to optimized target size
 # hyperparameters for the SGB algoritm
 maxiter = 3000
 miniter = 1500
-rho = .001 
+rho = .001
 stoch = TRUE
 ratio = .3
 
@@ -53,8 +53,8 @@ holdouttdl = array(NA,c(B,4)) # Holdout tdl for all methods
 
 TSlength = length(seq(0,nrow(mysynthdata)/3,nrow(mysynthdata)/3*increment)[-1])
 
-holdoutcampaign.profit.curve.myliftmodel = 
-  holdoutcampaign.profit.curve.mysgbmodel = holdoutcampaign.profit.curve.myrsgbmodel = 
+holdoutcampaign.profit.curve.myliftmodel =
+  holdoutcampaign.profit.curve.mysgbmodel = holdoutcampaign.profit.curve.myrsgbmodel =
   holdoutcampaign.profit.curve.mywsgbmodel = holdoutcampaign.profit.curve.mywsgb2model =
   holdoutcampaign.profit.curve.mywsgb3model = array(NA,c(B,TSlength)) # campaign profit curves
 
@@ -74,29 +74,29 @@ print("Estimating Uplift Model")
 # 1. estimate model on calibration sample, and make predictions for all observations
 myliftproc = lift.procedure(myseed = b,
                             mydata = mysynthdata,
-                            colnumbers.covariates = colnumbers.covariates, 
+                            colnumbers.covariates = colnumbers.covariates,
                             delta = delta,
                             conditional = conditional)
 
 # 2. optimize target size in the validation sample
-targetsize.mylift.valid = targetsizeoptimization(y = myliftproc$valid.data$y, 
-                                                treated = myliftproc$valid.data$w, 
+targetsize.mylift.valid = targetsizeoptimization(y = myliftproc$valid.data$y,
+                                                treated = myliftproc$valid.data$w,
                                                 scores = myliftproc$rmlift.valid,
-                                                m = myliftproc$valid.data$revenues, 
+                                                m = myliftproc$valid.data$revenues,
                                                 delta = delta,
                                                 conditional = conditional,
-                                                increment = increment, 
+                                                increment = increment,
                                                 plot = FALSE)$targetsize.maxprofit.trimmed/length(myliftproc$valid.data$y) # optimal target size, in percentage
 
 # 3. evaluate campaign profit on the holdout test sample
-myeval.myliftmodel = campaignevaluation(y = myliftproc$test.data$y, 
-                         treated = myliftproc$test.data$w, 
+myeval.myliftmodel = campaignevaluation(y = myliftproc$test.data$y,
+                         treated = myliftproc$test.data$w,
                          scores = myliftproc$rmlift.test,
                          m = myliftproc$test.data$revenues,
                          delta = delta,
                          conditional = conditional,
                          opttargetperc = targetsize.mylift.valid,
-                         increment = increment, 
+                         increment = increment,
                          plot = TRUE)
 holdoutprofit[b,1] = myeval.myliftmodel$campaign.evaluation # holdout campaign profit at optimized target size # TABLE 1
 holdoutcampaign.profit.curve.myliftmodel[b,] = myeval.myliftmodel$campaign.profit.curve # campaign profit curve on the test sample # FIGURE 2
@@ -104,7 +104,7 @@ holdoutcampaign.profit.curve.myliftmodel[b,] = myeval.myliftmodel$campaign.profi
 # 5. Calculate Holdout Gini Coefficient and Top Decile Lift
 holdoutgini[b,1] = gini(y = myliftproc$test.data$y, p = myliftproc$rmlift.test)
 holdouttdl[b,1] = top(y = myliftproc$test.data$y, p = myliftproc$rmlift.test, share = .1)
-  
+
 #-------------------#
 # Classic SGB model #
 #-------------------#
@@ -131,24 +131,24 @@ mysgbproc =  wsgb.procedure(myseed = b,
                              verbose = TRUE)
 
 # 2. optimize target size in the validation sample
-targetsize.sgb.valid = targetsizeoptimization(y = mysgbproc$valid.data$y, 
-                                              treated = mysgbproc$valid.data$w, 
+targetsize.sgb.valid = targetsizeoptimization(y = mysgbproc$valid.data$y,
+                                              treated = mysgbproc$valid.data$w,
                                               scores = mysgbproc$scores.valid,
-                                              m = mysgbproc$valid.data$revenues, 
+                                              m = mysgbproc$valid.data$revenues,
                                               delta = delta,
                                               conditional = conditional,
-                                              increment = increment, 
+                                              increment = increment,
                                               plot = FALSE)$targetsize.maxprofit.trimmed/length(mysgbproc$valid.data$y) # optimal target size, in percentage
 
 # 3. evaluate campaign profit on the holdout test sample
-myeval.mysgbmodel = campaignevaluation(y = mysgbproc$test.data$y, 
-                                        treated = mysgbproc$test.data$w, 
+myeval.mysgbmodel = campaignevaluation(y = mysgbproc$test.data$y,
+                                        treated = mysgbproc$test.data$w,
                                         scores = mysgbproc$scores.test,
                                         m = mysgbproc$test.data$revenues,
                                         delta = delta,
                                         conditional = conditional,
                                         opttargetperc = targetsize.sgb.valid,
-                                        increment = increment, 
+                                        increment = increment,
                                         plot = TRUE)
 holdoutprofit[b,2] = myeval.mysgbmodel$campaign.evaluation # holdout campaign profit at optimized target size # TABLE 1
 holdoutcampaign.profit.curve.mysgbmodel[b,] = myeval.mysgbmodel$campaign.profit.curve # campaign profit curve on the test sample # FIGURE 2
@@ -183,24 +183,24 @@ myrsgbproc =  wsgb.procedure(myseed = b,
                             verbose = TRUE)
 
 # 2. optimize target size in the validation sample
-targetsize.rsgb.valid = targetsizeoptimization(y = myrsgbproc$valid.data$y, 
-                                              treated = myrsgbproc$valid.data$w, 
+targetsize.rsgb.valid = targetsizeoptimization(y = myrsgbproc$valid.data$y,
+                                              treated = myrsgbproc$valid.data$w,
                                               scores = myrsgbproc$scores.valid,
-                                              m = myrsgbproc$valid.data$revenues, 
+                                              m = myrsgbproc$valid.data$revenues,
                                               delta = delta,
                                               conditional = conditional,
-                                              increment = increment, 
+                                              increment = increment,
                                               plot = FALSE)$targetsize.maxprofit.trimmed/length(myrsgbproc$valid.data$y) # optimal target size, in percentage
 
 # 3. evaluate campaign profit on the holdout test sample
-myeval.myrsgbmodel = campaignevaluation(y = myrsgbproc$test.data$y, 
-                                       treated = myrsgbproc$test.data$w, 
+myeval.myrsgbmodel = campaignevaluation(y = myrsgbproc$test.data$y,
+                                       treated = myrsgbproc$test.data$w,
                                        scores = myrsgbproc$scores.test,
                                        m = myrsgbproc$test.data$revenues,
                                        delta = delta,
                                        conditional = conditional,
                                        opttargetperc = targetsize.rsgb.valid,
-                                       increment = increment, 
+                                       increment = increment,
                                        plot = TRUE)
 holdoutprofit[b,3] = myeval.myrsgbmodel$campaign.evaluation # holdout campaign profit at optimized target size # TABLE 1
 holdoutcampaign.profit.curve.myrsgbmodel[b,] = myeval.myrsgbmodel$campaign.profit.curve # campaign profit curve on the test sample # FIGURE 2
@@ -235,24 +235,24 @@ mywsgbproc =  wsgb.procedure(myseed = b,
                              verbose = TRUE)
 
 # 2. optimize target size in the validation sample
-targetsize.wsgb.valid = targetsizeoptimization(y = mywsgbproc$valid.data$y, 
-                                              treated = mywsgbproc$valid.data$w, 
+targetsize.wsgb.valid = targetsizeoptimization(y = mywsgbproc$valid.data$y,
+                                              treated = mywsgbproc$valid.data$w,
                                               scores = mywsgbproc$scores.valid,
-                                              m = mywsgbproc$valid.data$revenues, 
+                                              m = mywsgbproc$valid.data$revenues,
                                               delta = delta,
                                               conditional = conditional,
-                                              increment = increment, 
+                                              increment = increment,
                                               plot = FALSE)$targetsize.maxprofit.trimmed/length(mywsgbproc$valid.data$y) # optimal target size, in percentage
 
 # 3. evaluate campaign profit on the holdout test sample
-myeval.mywsgbmodel = campaignevaluation(y = mywsgbproc$test.data$y, 
-                                        treated = mywsgbproc$test.data$w, 
+myeval.mywsgbmodel = campaignevaluation(y = mywsgbproc$test.data$y,
+                                        treated = mywsgbproc$test.data$w,
                                         scores = mywsgbproc$scores.test,
                                         m = mywsgbproc$test.data$revenues,
                                         delta = delta,
                                         conditional = conditional,
                                         opttargetperc = targetsize.wsgb.valid,
-                                        increment = increment, 
+                                        increment = increment,
                                         plot = TRUE)
 holdoutprofit[b,4] = myeval.mywsgbmodel$campaign.evaluation # holdout campaign profit at optimized target size # TABLE 1
 holdoutcampaign.profit.curve.mywsgbmodel[b,] = myeval.mywsgbmodel$campaign.profit.curve # campaign profit curve on the test sample # FIGURE 2
@@ -261,51 +261,51 @@ holdoutcampaign.profit.curve.mywsgbmodel[b,] = myeval.mywsgbmodel$campaign.profi
 
 # 4.1. Fixed target size based on churnrate
 fixedsize.churn[b] = fixedsizecampaignevaluation(y = mywsgbproc$test.data$y,
-                                                   treated = mywsgbproc$test.data$w,  
+                                                   treated = mywsgbproc$test.data$w,
                                                    scores = mywsgbproc$scores.test,
                                                    m = mywsgbproc$test.data$revenues,
                                                    delta = delta,
                                                    conditional = conditional,
-                                                   fixedsizeperc = mean(mywsgbproc$valid.data$y), 
+                                                   fixedsizeperc = mean(mywsgbproc$valid.data$y),
                                                    increment = increment)$profit.fixedsize  # holdout campaign profit at fixed size # TABLE 2
 
 # 4.2. Fixed target size based on budget constraint
 fixedsize.budget[b] = fixedsizecampaignevaluation(y = mywsgbproc$test.data$y,
-                                                    treated = mywsgbproc$test.data$w,  
+                                                    treated = mywsgbproc$test.data$w,
                                                     scores = mywsgbproc$scores.test,
                                                     m = mywsgbproc$test.data$revenues,
                                                     delta = delta,
                                                     conditional = conditional,
-                                                    fixedsizeperc = (budget/delta)/length(mywsgbproc$test.data$y), 
+                                                    fixedsizeperc = (budget/delta)/length(mywsgbproc$test.data$y),
                                                     increment = increment)$profit.fixedsize  # holdout campaign profit at fixed size # TABLE 2
 
 # 4.3. Optimized target size based on Verbeke
 targetsize.verbeke = verbeke(y = mywsgbproc$valid.data$y,
                              scores = mywsgbproc$scores.valid,
                              m = mywsgbproc$valid.data$revenues,
-                             delta = delta, 
+                             delta = delta,
                              increment = increment,
                              gamma = mean(myliftproc$r0.valid-myliftproc$r1.valid), # i.e., average (estimated) churn lift
                              c = 0,  A = 0, plot = FALSE)$targetsize.maxprofit/length(mywsgbproc$valid.data$y)
-optsize.verbeke[b] = campaignevaluation(y = mywsgbproc$test.data$y, 
-                                          treated = mywsgbproc$test.data$w, 
+optsize.verbeke[b] = campaignevaluation(y = mywsgbproc$test.data$y,
+                                          treated = mywsgbproc$test.data$w,
                                           scores = mywsgbproc$scores.test,
                                           m = mywsgbproc$test.data$revenues,
                                           delta = delta,
                                           conditional = conditional,
                                           opttargetperc = targetsize.verbeke,
-                                          increment = increment, 
+                                          increment = increment,
                                           plot = TRUE)$campaign.evaluation
 
 # 4.4. 10% Buffer
-optsize.buffer[b] = campaignevaluation(y = mywsgbproc$test.data$y, 
-                                         treated = mywsgbproc$test.data$w, 
+optsize.buffer[b] = campaignevaluation(y = mywsgbproc$test.data$y,
+                                         treated = mywsgbproc$test.data$w,
                                          scores = mywsgbproc$scores.test,
                                          m = mywsgbproc$test.data$revenues,
                                          delta = delta,
                                          conditional = conditional,
                                          opttargetperc = targetsize.sgb.valid + buffer,
-                                         increment = increment, 
+                                         increment = increment,
                                          plot = TRUE)$campaign.evaluation
 
 # 5. Calculate Holdout Gini Coefficient and Top Decile Lift
@@ -347,24 +347,24 @@ mywsgbproc2 =  wsgb.procedure(myseed = b,
                              verbose = TRUE)
 
 # 2. optimize target size in the validation sample
-targetsize.wsgb2.valid = targetsizeoptimization(y = mywsgbproc2$valid.data$y, 
-                                               treated = mywsgbproc2$valid.data$w, 
+targetsize.wsgb2.valid = targetsizeoptimization(y = mywsgbproc2$valid.data$y,
+                                               treated = mywsgbproc2$valid.data$w,
                                                scores = mywsgbproc2$scores.valid,
-                                               m = mywsgbproc2$valid.data$revenues, 
+                                               m = mywsgbproc2$valid.data$revenues,
                                                delta = delta,
                                                conditional = conditional,
-                                               increment = increment, 
+                                               increment = increment,
                                                plot = FALSE)$targetsize.maxprofit.trimmed/length(mywsgbproc2$valid.data$y) # optimal target size, in percentage
 
 # 3. evaluate campaign profit on the holdout test sample
-myeval.mywsgb2model = campaignevaluation(y = mywsgbproc2$test.data$y, 
-                                        treated = mywsgbproc2$test.data$w, 
+myeval.mywsgb2model = campaignevaluation(y = mywsgbproc2$test.data$y,
+                                        treated = mywsgbproc2$test.data$w,
                                         scores = mywsgbproc2$scores.test,
                                         m = mywsgbproc2$test.data$revenues,
                                         delta = delta,
                                         conditional = conditional,
                                         opttargetperc = targetsize.wsgb2.valid,
-                                        increment = increment, 
+                                        increment = increment,
                                         plot = TRUE)
 holdoutprofit[b,5] = myeval.mywsgb2model$campaign.evaluation # holdout campaign profit at optimized target size # TABLE 1
 holdoutcampaign.profit.curve.mywsgb2model[b,] = myeval.mywsgb2model$campaign.profit.curve # campaign profit curve on the test sample # FIGURE 2
@@ -396,24 +396,24 @@ mywsgbproc3 =  wsgb.procedure(myseed = b,
                               verbose = TRUE)
 
 # 2. optimize target size in the validation sample
-targetsize.wsgb3.valid = targetsizeoptimization(y = mywsgbproc3$valid.data$y, 
-                                                treated = mywsgbproc3$valid.data$w, 
+targetsize.wsgb3.valid = targetsizeoptimization(y = mywsgbproc3$valid.data$y,
+                                                treated = mywsgbproc3$valid.data$w,
                                                 scores = mywsgbproc3$scores.valid,
-                                                m = mywsgbproc3$valid.data$revenues, 
+                                                m = mywsgbproc3$valid.data$revenues,
                                                 delta = delta,
                                                 conditional = conditional,
-                                                increment = increment, 
+                                                increment = increment,
                                                 plot = FALSE)$targetsize.maxprofit.trimmed/length(mywsgbproc3$valid.data$y) # optimal target size, in percentage
 
 # 3. evaluate campaign profit on the holdout test sample
-myeval.mywsgb3model = campaignevaluation(y = mywsgbproc3$test.data$y, 
-                                         treated = mywsgbproc3$test.data$w, 
+myeval.mywsgb3model = campaignevaluation(y = mywsgbproc3$test.data$y,
+                                         treated = mywsgbproc3$test.data$w,
                                          scores = mywsgbproc3$scores.test,
                                          m = mywsgbproc3$test.data$revenues,
                                          delta = delta,
                                          conditional = conditional,
                                          opttargetperc = targetsize.wsgb3.valid,
-                                         increment = increment, 
+                                         increment = increment,
                                          plot = TRUE)
 holdoutprofit[b,6] = myeval.mywsgb3model$campaign.evaluation # holdout campaign profit at optimized target size # TABLE 1
 holdoutcampaign.profit.curve.mywsgb3model[b,] = myeval.mywsgb3model$campaign.profit.curve # campaign profit curve on the test sample # FIGURE 2

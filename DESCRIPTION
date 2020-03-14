@@ -1,10 +1,10 @@
 Package: ProfitBoost
 Type: Package
-Title: Profit lift estimatation
+Title: Profit lift estimation
 Version: 0.1
 Authors@R: c(person("Aurelie", "Lemmens", role = c("aut", "cre"), 
         comment = c(ORCID = "0000-0002-7630-6159"), email = "lemmens@rsm.nl"),
-    person("Robin", "van Emden", role = "ctb", email = "lemmens@rsm.nl", 
+    person("Robin", "van Emden", role = "ctb", email = "robinvanemden@gmail.com", 
         comment = c(ORCID = "0000-0001-5820-8638")))
 Maintainer: Aurelie Lemmens <lemmens@rsm.nl>
 Description: Estimates profit lift of targeted interventions to optimize their profitability.
@@ -16,12 +16,10 @@ Depends:
     R (>= 3.5.0)
 Imports:
 Suggests:
-    BART,
+    stargazer,
     testthat,
     covr,
-    devtools,
-    usethis,
-    knitr
+    devtools
 VignetteBuilder: knitr
 URL: https://github.com/AurelieLemmensRSM/ProfitBoost
 BugReports: https://github.com/AurelieLemmensRSM/ProfitBoost/issues

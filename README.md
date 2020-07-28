@@ -7,7 +7,7 @@ Managing Churn to Optimize Profits, Marketing Science.
 Installation
 ------------
 
-To install ProfitBoost from CRAN:
+To install ProfitBoost from CRAN (as soon as it is available there):
 
 ```R
 install.packages('ProfitBoost')

@@ -1,7 +1,6 @@
 Meta
 doc
 packrat/lib*/
-inst/doc
 tests/testthat/Rplots.pdf
 yahoodb-journal
 
@@ -12,7 +11,6 @@ credentials.json
 **/credentials.json
 **/doparallel.log
 **/progress.log
-*.Rdata
 *.Rds
 *.log
 *.LOG
@@ -23,7 +21,6 @@ docs/reference/RandomPolicy-1.png
 .Rhistory
 .Rapp.history
 # Session Data files
-.RData
 # Example code in package build process
 *-Ex.R
 # Output files from R CMD build

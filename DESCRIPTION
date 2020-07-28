@@ -15,12 +15,12 @@ RoxygenNote: 7.1.1
 Depends:
     R (>= 3.5.0)
 Imports:
-    knitr,
-    R6,
+    graphics,
     stargazer,
     uplift,
     tree
 Suggests:
+    knitr,
     testthat,
     covr,
     devtools

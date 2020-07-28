@@ -17,6 +17,6 @@ score to churn of all customers}
 the gini coefficient
 }
 \description{
-This function calculates the gini coefficient of a churn model,
+This function calculates the Gini coefficient of a churn model,
 given the estimated probabilities to churn.
 }

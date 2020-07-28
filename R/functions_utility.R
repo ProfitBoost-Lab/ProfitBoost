@@ -90,8 +90,8 @@ verbeke = function(y,
       xlab = "Target Size",
       ylab = "Verbeke Profit"
     )
-    abline(h = maxprofit, lty = 2)
-    abline(v = targetsize.maxprofit, lty = 2)
+    graphics::abline(h = maxprofit, lty = 2)
+    graphics::abline(v = targetsize.maxprofit, lty = 2)
   }
 
   list(

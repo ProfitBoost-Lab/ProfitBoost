@@ -24,7 +24,7 @@ library(stargazer)
 
 ## Preamble
 
-This document is built using R Markdown and shows how to replicate the results of Lemmens and Gupta (2020). Because the data used in the manuscript are subject to a non-disclosure agreement, this document is based on a synthetic dataset, which mimics the original observed data and preserves the relationships between variables but does not contain any disclosive records. As a consequence, results reported in this document are different from the ones reported in the paper. Please note that knitting this file might take a while when using boostrapping (i.e., B greater than 1 in the code), as the file estimates all models tested in the main manuscript, including all benchmark models. A R package is currently under development and will be released soon. You can find the latest information on wwww.aurelielemmens.com. Note that the set of results reported below are for the profit-based loss with left weighting. The code can be adapted as described in the R markdown document to display right weighting or symmetric weigting. 
+This document is built using R Markdown and shows how to replicate the results of Lemmens and Gupta (2020). Because the data used in the manuscript are subject to a non-disclosure agreement, this document is based on a synthetic dataset, which mimics the original observed data and preserves the relationships between variables but does not contain any disclosive records. As a consequence, results reported in this document are different from the ones reported in the paper. Please note that knitting this file might take a while when using bootstrapping (i.e., B greater than 1 in the code), as the file estimates all models tested in the main manuscript, including all benchmark models. A R package is currently under development and will be released soon. You can find the latest information on wwww.aurelielemmens.com. Note that the set of results reported below are for the profit-based loss with left weighting. The code can be adapted as described in the R markdown document to display right weighting or symmetric weighting. 
 
 The replication files include:
 
@@ -85,7 +85,7 @@ matplot(TS,holdoutcampaign.profit.curves,
         xlab = "Target Size", ylab = "Campaign Profitability",pch="",xaxt="n",
         main = paste0("Average Holdout Campaign Profit (",B," iterations)"))  
 matpoints(TS,holdoutcampaign.profit.curves,col=rep(1,4),pch=1:4,type="o") 
-abline(h=holdoutcampaign.profit.curves[nrow(holdoutcampaign.profit.curves),4],lty=5,col="grey")
+graphics::abline(h=holdoutcampaign.profit.curves[nrow(holdoutcampaign.profit.curves),4],lty=5,col="grey")
 axis(side=1, at=seq(0,nrow(mysynthdata)/3,length.out =11), 
      labels=paste0(seq(0,100,length.out =11),"%"))
 legend(0,5000,c("Classic Loss","Reordered Classic Loss","Uplift","Profit Loss"),
@@ -103,7 +103,7 @@ matplot(TS,holdoutcampaign.profit.curves,
         xlab = "Target Size", ylab = "Campaign Profitability",pch="",xaxt="n",
         main = paste0("Average Holdout Campaign Profit (",B," iterations)"))   
 matpoints(TS,holdoutcampaign.profit.curves,col=rep(1,3),pch=5:7,type="o") 
-abline(h=holdoutcampaign.profit.curves[nrow(holdoutcampaign.profit.curves),3],lty=5,col="grey")
+graphics::abline(h=holdoutcampaign.profit.curves[nrow(holdoutcampaign.profit.curves),3],lty=5,col="grey")
 axis(side=1, at=seq(0,nrow(mysynthdata)/3,length.out =11), 
      labels=paste0(seq(0,100,length.out =11),"%"))
 legend(0,5000,c("Symmetric Weighting","Right Weighting","Left Weighting"),

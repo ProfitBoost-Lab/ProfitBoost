@@ -63,7 +63,7 @@ campaignevaluation = function(y,
       xlab = "Target Size",
       ylab = "Campaign Profitability"
     )
-    abline(v = targetsize.maxprofit, lty = 2)
+    graphics::abline(v = targetsize.maxprofit, lty = 2)
   }
 
   list(

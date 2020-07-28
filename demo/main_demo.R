@@ -4,19 +4,6 @@
 
 library(ProfitBoost)
 
-source("R/campaign_evaluation.R")
-source("R/campaign_profit_lift.R")
-source("R/create_three_samples.R")
-source("R/fixed_size_campaign_evaluation.R")
-source("R/functions_utility.R")
-source("R/overlap_per_decile.R")
-source("R/procedure_lift_model.R")
-source("R/procedure_wsgb_model.R")
-source("R/ProfitBoost-package.R")
-source("R/sgb_user_defined_loss.R")
-source("R/targetsize_optimization.R")
-source("R/verbeke_approach.R")
-
 #-----------#
 # load data #
 #-----------#
@@ -26,7 +13,8 @@ source("R/verbeke_approach.R")
 # w = treated or not
 # revenues = post-intervention cash flow
 
-load("data/mysynthdata.Rdata", verbose = T)
+# load data
+load("data/mysynthdata.rda")
 
 mysynthdata           <- mysynthdata[1:200, ] ########## RVE temp --- delete this again
 
@@ -624,4 +612,4 @@ for (b in 1:B) {
 
 } # end of the bootstrapping
 
-save.image("data/results.RData")
+save.image("inst/extdata/results.RData", compress = TRUE)

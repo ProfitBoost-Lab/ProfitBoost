@@ -1,23 +1,32 @@
 ---
-title: "Replication Code: Managing Churn to Maximize Profits"
 author: "Aurélie Lemmens, Sunil Gupta"
+title: "Replication Code: Managing Churn to Maximize Profits"
 date: "2020/28/01"
-output:
-  pdf_document: default
-  html_document:
-    df_print: paged
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Replication Code: Managing Churn to Maximize Profits}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  echo = TRUE,
+  comment = "#>"
+)
+```
 
 \fontsize{8}{8}
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
 
 # if one wants to re-run the code:
-##source('demo/main_demo.R')
+#source('demo/main_demo.R')
 
 # if one only wants to print the results of the code that already ran
-load('results.Rdata', verbose = T)
+load('../inst/extdata/results.RData', verbose = T)
+library(ProfitBoost)
 library(stargazer)
 
 ```
@@ -35,7 +44,7 @@ The replication files include:
 ## Table 1: Average holdout campaign profit for different estimation methods
 ```{r Table1, warning = FALSE, message = FALSE, echo =FALSE}
 k = 4 # selects the weighting scheme, here left weighting
-table1 = apply(holdoutprofit[,c(1:3,k)],2,mean,na.rm=T)
+table1 = apply(holdoutprofit[,c(1:3,k),drop=F],2,mean,na.rm=T)
 names(table1) = c("Uplift Model","Classic Loss","Reordered Classic Loss","Our Approach")
 table1 = table1[c(2,3,1,4)]
 table1 = t(t(table1)) 

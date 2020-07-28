@@ -20,6 +20,7 @@
 #'                 DV and weights in the profit loss function - not needed for
 #'                 classic loss increment, used to assess convergence in SGB
 #'                 when computing optimal target size
+#' @param increment granularity level to determine optimal campaign size
 #' @param maxiter  maxiter hyperparameter SGB (default: 3000)
 #' @param miniter  miniter hyperparameter SGB (default: 1500)
 #' @param rho      rho hyperparameter SGB     (default: .001)

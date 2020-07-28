@@ -26,10 +26,11 @@
 #' @param m revenue
 #' @param scores predicted scores provided by the model
 #' @param delta action cost (default: 12)
+#' @param increment granularity level
 #' @param gamma success rate of the incentive (estimated as ATE)
 #' @param c cost of contact (default: 0)
 #' @param A Fixed costs (default: 0)
-#' @param Plot Plot the results? (default: FALSE)
+#' @param plot Plot the results? (default: FALSE)
 #'
 #' @return A list containing campaign profit curve, target sizes,
 #' maximum profit and related variables.

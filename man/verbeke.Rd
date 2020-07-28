@@ -15,13 +15,15 @@ verbeke(y, scores, m, delta, increment, gamma, c = 0, A = 0, plot = TRUE)
 
 \item{delta}{action cost (default: 12)}
 
+\item{increment}{granularity level}
+
 \item{gamma}{success rate of the incentive (estimated as ATE)}
 
 \item{c}{cost of contact (default: 0)}
 
 \item{A}{Fixed costs (default: 0)}
 
-\item{Plot}{Plot the results? (default: FALSE)}
+\item{plot}{Plot the results? (default: FALSE)}
 }
 \value{
 A list containing campaign profit curve, target sizes,

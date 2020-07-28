@@ -16,14 +16,16 @@ Depends:
     R (>= 3.5.0)
 Imports:
     graphics,
-    stargazer,
     uplift,
     tree
 Suggests:
     knitr,
+    stargazer,
     testthat,
     covr,
-    devtools
+    devtools,
+    readr,
+    rmarkdown
 VignetteBuilder: knitr
 URL: https://github.com/AurelieLemmensRSM/ProfitBoost
 BugReports: https://github.com/AurelieLemmensRSM/ProfitBoost/issues

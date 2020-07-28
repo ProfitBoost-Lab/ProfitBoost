@@ -57,6 +57,8 @@ DV and weights in the profit loss function - not needed for
 classic loss increment, used to assess convergence in SGB
 when computing optimal target size}
 
+\item{increment}{granularity level to determine optimal campaign size}
+
 \item{maxiter}{maxiter hyperparameter SGB (default: 3000)}
 
 \item{miniter}{miniter hyperparameter SGB (default: 1500)}

@@ -21,9 +21,9 @@
 #' CLV = average customer lifetime value
 #' A = fixed costs = 0
 #'
-#' @param N Number of customers in the customer base
-#' @param alpha proportion targeted (target size in %) - vary to find max profit
-#' @param beta0 proportion of true would-be churners in customer base
+#' @param y data
+#' @param scores estimated scores
+#' @param m revenue
 #' @param scores predicted scores provided by the model
 #' @param delta action cost (default: 12)
 #' @param gamma success rate of the incentive (estimated as ATE)

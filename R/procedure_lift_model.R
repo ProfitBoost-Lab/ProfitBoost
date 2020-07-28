@@ -8,7 +8,7 @@
 #' @param mydata select the data to be split in 3 samples
 #' @param colnumbers.covariates column numbers of predictors excluding w
 #' @param delta cost of intervention
-#' @param conditional) whether the offer is conditional or not
+#' @param conditional whether the offer is conditional or not
 #'
 #' @return  List containing seed (myseed),
 #'          whether the offer is conditional or not (conditional), and
@@ -78,7 +78,7 @@ lift.procedure <- function(myseed,
   # estimate retention lift model
   #------------------------------
 
-  myform      <- as.formula(paste(
+  myform      <- stats::as.formula(paste(
     "y ~ trt(w) + ",
     paste0(colnames(mydata[, colnumbers.covariates]),
       collapse   = "+"
@@ -93,9 +93,9 @@ lift.procedure <- function(myseed,
     verbose      = FALSE
   )
 
-  pred.train  <- predict(myliftmodel, train.data)
-  pred.valid  <- predict(myliftmodel, valid.data)
-  pred.test   <- predict(myliftmodel, test.data)
+  pred.train  <- stats::predict(myliftmodel, train.data)
+  pred.valid  <- stats::predict(myliftmodel, valid.data)
+  pred.test   <- stats::predict(myliftmodel, test.data)
 
   # probability of churn if targeted on the train sample
   r1.train    <- pred.train[, 1]

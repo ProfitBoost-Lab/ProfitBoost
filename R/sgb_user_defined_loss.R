@@ -48,6 +48,7 @@
 #' @param increment.convergence granularity level to determine convergence by
 #'                              calculating optimal campaign profit at each
 #'                              iteration
+#' @param m0.train nontargeted margin scores reordered classic loss train sample
 #' @param m1.train targeted margin scores reordered classic loss train sample
 #' @param m0.valid nontargeted margin scores reordered classic loss valid sample
 #' @param m1.valid targeted margin scores reordered classic loss valid sample
@@ -310,7 +311,7 @@ sgb.loss <- function(
   Importancename <- colnames(data.train[, pos.covariates])[1:nvar]
 
   # set formula
-  my.form <- as.formula("grad ~ .")
+  my.form <- stats::as.formula("grad ~ .")
 
   iter <- 1
   plot.count <- 0
@@ -422,31 +423,31 @@ sgb.loss <- function(
     # Predict the node where an observation falls into:
 
     # in the full training set
-    treetrainselected <- predict(knodetree, data.train[sub, ], type = "where")
+    treetrainselected <- stats::predict(knodetree, data.train[sub, ], type = "where")
     # in the full training set
-    treetrain <- predict(knodetree, data.train, type = "where")
+    treetrain <- stats::predict(knodetree, data.train, type = "where")
     # in the validation set
-    treevalid <- predict(knodetree, data.valid, type = "where")
+    treevalid <- stats::predict(knodetree, data.valid, type = "where")
     # in the test set
-    treetest <- predict(knodetree, data.test, type = "where")
+    treetest <- stats::predict(knodetree, data.test, type = "where")
 
     if (exists("otherdata1") & !is.null(otherdata1)) {
-      treeother1 <- predict(knodetree, otherdata1, type = "where")
+      treeother1 <- stats::predict(knodetree, otherdata1, type = "where")
     }
     if (exists("otherdata2") & !is.null(otherdata2)) {
-      treeother2 <- predict(knodetree, otherdata2, type = "where")
+      treeother2 <- stats::predict(knodetree, otherdata2, type = "where")
     }
     if (exists("otherdata3") & !is.null(otherdata3)) {
-      treeother3 <- predict(knodetree, otherdata3, type = "where")
+      treeother3 <- stats::predict(knodetree, otherdata3, type = "where")
     }
     if (exists("otherdata4") & !is.null(otherdata4)) {
-      treeother4 <- predict(knodetree, otherdata4, type = "where")
+      treeother4 <- stats::predict(knodetree, otherdata4, type = "where")
     }
     if (exists("otherdata5") & !is.null(otherdata5)) {
-      treeother5 <- predict(knodetree, otherdata5, type = "where")
+      treeother5 <- stats::predict(knodetree, otherdata5, type = "where")
     }
     if (exists("otherdata6") & !is.null(otherdata6)) {
-      treeother6 <- predict(knodetree, otherdata6, type = "where")
+      treeother6 <- stats::predict(knodetree, otherdata6, type = "where")
     }
 
     # indice is (kk x ntrain) matrix with 1/0 indicator variables for
@@ -876,20 +877,20 @@ sgb.loss <- function(
     r1.test.post <- 1  / (1 + exp(fmother6))
 
     if (conditional == TRUE) {
-      fm <- ((1 - r1.train.post) * (m1.train - delta)) -
+      fm <- ((1 - r1.train.post) * (m1.train - delta.convergence)) -
         ((1 - r0.train.post) * m0.train)
-      fmvalid <- ((1 - r1.valid.post) * (m1.valid - delta)) -
+      fmvalid <- ((1 - r1.valid.post) * (m1.valid - delta.convergence)) -
         ((1 - r0.valid.post) * m0.valid)
-      fmtest <- ((1 - r1.test.post) * (m1.test - delta)) -
+      fmtest <- ((1 - r1.test.post) * (m1.test - delta.convergence)) -
         ((1 - r0.test.post) * m0.test)
     }
     if (conditional == FALSE) {
       fm <- ((1 - r1.train.post) * (m1.train)) -
-        ((1 - r0.train.post) * m0.train) - delta
+        ((1 - r0.train.post) * m0.train) - delta.convergence
       fmvalid <- ((1 - r1.valid.post) * (m1.valid)) -
-        ((1 - r0.valid.post) * m0.valid) - delta
+        ((1 - r0.valid.post) * m0.valid) - delta.convergence
       fmtest <- ((1 - r1.test.post) * (m1.test)) -
-        ((1 - r0.test.post) * m0.test) - delta
+        ((1 - r0.test.post) * m0.test) - delta.convergence
     }
   }
 

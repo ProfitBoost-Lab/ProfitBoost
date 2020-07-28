@@ -108,6 +108,8 @@ iteration}
 calculating optimal campaign profit at each
 iteration}
 
+\item{m0.train}{nontargeted margin scores reordered classic loss train sample}
+
 \item{m1.train}{targeted margin scores reordered classic loss train sample}
 
 \item{m0.valid}{nontargeted margin scores reordered classic loss valid sample}

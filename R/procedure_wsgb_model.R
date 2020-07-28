@@ -7,6 +7,7 @@
 #' @param myseed   seed for reproducibility of the results
 #' @param mydata   input data
 #' @param pos.covariates position (column number of the covariates)
+#' @param pos.y    indicates the position (column number) of y in the data set
 #' @param delta    intervention cost
 #' @param conditional whether the offer is conditional on renewal
 #' @param loss     loss function
@@ -55,6 +56,7 @@
 wsgb.procedure <- function(myseed,
                            mydata,
                            pos.covariates,
+                           pos.y,
                            delta,
                            conditional,
                            loss,

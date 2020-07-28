@@ -8,6 +8,7 @@ wsgb.procedure(
   myseed,
   mydata,
   pos.covariates,
+  pos.y,
   delta,
   conditional,
   loss,
@@ -35,6 +36,8 @@ wsgb.procedure(
 \item{mydata}{input data}
 
 \item{pos.covariates}{position (column number of the covariates)}
+
+\item{pos.y}{indicates the position (column number) of y in the data set}
 
 \item{delta}{intervention cost}
 

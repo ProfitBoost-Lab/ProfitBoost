@@ -7,7 +7,11 @@
 verbeke(y, scores, m, delta, increment, gamma, c = 0, A = 0, plot = TRUE)
 }
 \arguments{
+\item{y}{data}
+
 \item{scores}{predicted scores provided by the model}
+
+\item{m}{revenue}
 
 \item{delta}{action cost (default: 12)}
 
@@ -16,12 +20,6 @@ verbeke(y, scores, m, delta, increment, gamma, c = 0, A = 0, plot = TRUE)
 \item{c}{cost of contact (default: 0)}
 
 \item{A}{Fixed costs (default: 0)}
-
-\item{N}{Number of customers in the customer base}
-
-\item{alpha}{proportion targeted (target size in \%) - vary to find max profit}
-
-\item{beta0}{proportion of true would-be churners in customer base}
 
 \item{Plot}{Plot the results? (default: FALSE)}
 }

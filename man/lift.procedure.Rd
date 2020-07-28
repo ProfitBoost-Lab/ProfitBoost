@@ -15,7 +15,7 @@ lift.procedure(myseed, mydata, colnumbers.covariates, delta, conditional)
 
 \item{delta}{cost of intervention}
 
-\item{conditional)}{whether the offer is conditional or not}
+\item{conditional}{whether the offer is conditional or not}
 }
 \value{
 List containing seed (myseed),

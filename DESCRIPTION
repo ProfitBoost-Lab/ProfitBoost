@@ -1,7 +1,7 @@
 Package: ProfitBoost
 Type: Package
 Title: Profit lift estimation
-Version: 0.1
+Version: 0.9.0.0
 Authors@R: c(person("Aurelie", "Lemmens", role = c("aut", "cre"), 
         comment = c(ORCID = "0000-0002-7630-6159"), email = "lemmens@rsm.nl"),
     person("Robin", "van Emden", role = "ctb", email = "robinvanemden@gmail.com", 

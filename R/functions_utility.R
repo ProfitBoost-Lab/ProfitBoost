@@ -19,7 +19,6 @@ top <- function(y, p, share) {
   helpdata <- cbind(y, p)
   helpdata <- helpdata[rev(order(p)), ]
   n <- dim(helpdata)[[1]]
-  percy <- cumsum(helpdata[, 1]) / sum(y)
   perccust <- seq(1, n) / n
   churnrate <- sum(y) / n
   index <- (perccust <= share)

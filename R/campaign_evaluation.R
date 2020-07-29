@@ -15,7 +15,8 @@
 #' @param delta intervention cost
 #' @param conditional whether the offer is conditional on renewal
 #' @param opttargetperc vector of length k of given target size for each method
-#' @param increment share of customers added to target size, if "unit", customers are added one by one
+#' @param increment share of customers added to target size, if "unit",
+#'                  customers are added one by one
 #' @param plot whether the campaign profit curve should be plotted
 #'
 #' @return A list containing holdout campaign profit at optimal target size
@@ -48,8 +49,9 @@ campaignevaluation <- function(y,
   # percentage * the number of observations = number
   targetsize.maxprofit <- opttargetperc * nrow(scores)
 
-  for (k in 1:ncol(scores)) {
-    target.index <- rev(order(scores[, k]))[1:targetsize.maxprofit[k]] # indices of the targeted customers
+  for (k in seq_len(ncol(scores))) {
+    # indices of the targeted customers
+    target.index <- rev(order(scores[, k]))[1:targetsize.maxprofit[k]]
     ce[k] <- campaignprofitlift(y[target.index], treated[target.index],
       m[target.index], delta,
       conditional = conditional
@@ -57,15 +59,14 @@ campaignevaluation <- function(y,
   }
 
   if (increment == "unit") {
-    target.sizes <- 1:length(scores)
+    target.sizes <- seq_len(length(scores))
   }
   if (increment != "unit") {
     target.sizes <- seq(0, length(scores), length(scores) * increment)[-1]
   }
 
   campaign.profit.curve <- c()
-  for (i in target.sizes)
-  {
+  for (i in target.sizes) {
     target.index <- rev(order(scores))[1:i] # indices of the targeted customers
     campaign.profit.curve <- c(
       campaign.profit.curve,

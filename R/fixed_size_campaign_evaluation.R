@@ -32,7 +32,7 @@ fixedsizecampaignevaluation <- function(y,
                                         fixedsizeperc,
                                         increment = .1) {
   if (increment == "unit") {
-    target.sizes <- 1:length(scores)
+    target.sizes <- seq_len(length(scores))
   }
 
   if (increment != "unit") {
@@ -45,8 +45,7 @@ fixedsizecampaignevaluation <- function(y,
   fixedsizeposition <- order(abs(target.sizes - fixedsize))[1]
 
   campaign.profit.curve <- c()
-  for (i in target.sizes)
-  {
+  for (i in target.sizes) {
     # indices of the targeted customers
     target.index <- rev(order(scores))[1:i]
     campaign.profit.curve <- c(

@@ -1,0 +1,14 @@
+citHeader("To cite ProfitBoost in publications use:")
+
+citEntry(
+  entry    = "Article",
+  title    = "Managing churn to maximize profits",
+  author   = personList(as.person("Aurelie Lemmens"), as.person("Sunil Gupta")),
+  journal  = "Marketing Science",
+  year     = "2020",
+  url      = "https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2964906",
+  textVersion = paste("Aurelie Lemmens, Sunil Gupta (2020).",
+    "Managing churn to maximize profits.",
+    "Marketing Science.",
+    "URL https://papers.ssrn.com/sol3/papers.cfm?abstract_id=2964906.")
+)

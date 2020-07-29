@@ -40,7 +40,7 @@ targetsizeoptimization <- function(y,
                                    plot        = TRUE) {
 
   if (increment == "unit") {
-    target.sizes <- 1:length(scores)
+    target.sizes <- seq_len(length(scores))
   }
 
   if (increment != "unit") {
@@ -49,8 +49,7 @@ targetsizeoptimization <- function(y,
 
   campaign.profit.curve <- c()
 
-  for (i in target.sizes)
-  {
+  for (i in target.sizes) {
     target.index <- rev(order(scores))[1:i] # indices of the targeted customers
     campaign.profit.curve <- c(
       campaign.profit.curve,
@@ -91,7 +90,8 @@ targetsizeoptimization <- function(y,
           na.rm = TRUE
       )
 
-    secondbest.targetsize.maxprofit.trimmed <-
+    secbest.trgtsize.mxprof.trim
+    secbest.trgtsize.mxprof.trim <-
       min(target.sizes[5:length(target.sizes)]
           [secondbest.maxprofit.trimmed ==
               campaign.profit.curve[5:length(target.sizes)]],
@@ -120,11 +120,11 @@ targetsizeoptimization <- function(y,
             (length(target.sizes) * increment), 5):length(target.sizes)]],
           na.rm = TRUE)
 
-    secondbest.targetsize.maxprofit.trimmed <-
+    secbest.trgtsize.mxprof.trim <-
       min(target.sizes[max((length(target.sizes) * increment), 5):
                          length(target.sizes)]
-          [secondbest.maxprofit.trimmed ==
-              campaign.profit.curve[max((length(target.sizes) *increment), 5):
+          [secondbest.maxprofit.trimmed == campaign.profit.curve[max(
+            (length(target.sizes) * increment), 5):
                   length(target.sizes)]], na.rm = TRUE)
   }
 
@@ -147,7 +147,7 @@ targetsizeoptimization <- function(y,
     targetsize.maxprofit         = targetsize.maxprofit,
     maxprofit.trimmed            = maxprofit.trimmed,
     targetsize.maxprofit.trimmed = targetsize.maxprofit.trimmed,
-    secondbesttargetsize.trimmed = secondbest.targetsize.maxprofit.trimmed,
+    secondbesttargetsize.trimmed = secbest.trgtsize.mxprof.trim,
     increment                    = increment
   )
 }

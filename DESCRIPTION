@@ -24,7 +24,6 @@ Suggests:
     testthat,
     covr,
     devtools,
-    readr,
     rmarkdown
 VignetteBuilder: knitr
 URL: https://github.com/AurelieLemmensRSM/ProfitBoost

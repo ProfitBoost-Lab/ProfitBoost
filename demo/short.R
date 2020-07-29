@@ -612,4 +612,4 @@ for (b in 1:B) {
 
 } # end of the bootstrapping
 
-save.image("inst/extdata/results.RData", compress = TRUE)
+#save.image("inst/extdata/results.RData", compress = TRUE)

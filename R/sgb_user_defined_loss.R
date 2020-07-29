@@ -9,9 +9,9 @@
 #' It calibrates the model on a calibration sample and generates predictions
 #' on a validation and test samples.
 #'
-#' @param data.train training dataset
-#' @param data.valid validation dataset
-#' @param data.test  test dataset
+#' @param data.train training data set
+#' @param data.valid validation data set
+#' @param data.test  test data set
 #' @param otherdata1 other data used for the reordered classic loss, 1
 #' @param otherdata2 other data used for the reordered classic loss, 2
 #' @param otherdata3 other data used for the reordered classic loss, 3
@@ -48,13 +48,16 @@
 #' @param increment.convergence granularity level to determine convergence by
 #'                              calculating optimal campaign profit at each
 #'                              iteration
-#' @param m0.train nontargeted margin scores reordered classic loss train sample
+#' @param m0.train non-targeted margin scores reordered classic
+#'                 loss train sample
 #' @param m1.train targeted margin scores reordered classic loss train sample
-#' @param m0.valid nontargeted margin scores reordered classic loss valid sample
-#' @param m1.valid targeted margin scores reordered classic loss valid sample
-#' @param m0.test  nontargeted margin scores reordered classic loss test sample
+#' @param m0.valid non-targeted margin scores reordered classic loss
+#'                 validation sample
+#' @param m1.valid targeted margin scores reordered classic loss
+#'                 validation sample
+#' @param m0.test  non-targeted margin scores reordered classic loss test sample
 #' @param m1.test  targeted margin scores reordered classic loss test sample
-#' @param verbose verbose output (default: TRUE)
+#' @param verbose  verbose output (default: TRUE)
 #'
 #' @return A list containing best iteration of sgb (best.iteration.valid),
 #'         scores at best iteration (fmts),
@@ -225,43 +228,31 @@ sgb.loss <- function(
   nvalid <- dim(data.valid)[1]
   ntest <- dim(data.test)[1]
 
-  if (sum(colnames(data.train) == "w") != 0) {
-    w <- data.train$w
-  }
-
   # the following data are used for reordering scores (re-ordered classic loss)
   if (exists("otherdata1") & !is.null(otherdata1)) {
-    yother1 <- otherdata1[, pos.y]
     nother1 <- dim(otherdata1)[1]
   }
   if (exists("otherdata2") & !is.null(otherdata2)) {
-    yother2 <- otherdata2[, pos.y]
     nother2 <- dim(otherdata2)[1]
   }
   if (exists("otherdata3") & !is.null(otherdata3)) {
-    yother3 <- otherdata3[, pos.y]
     nother3 <- dim(otherdata3)[1]
   }
   if (exists("otherdata4") & !is.null(otherdata4)) {
-    yother4 <- otherdata4[, pos.y]
     nother4 <- dim(otherdata4)[1]
   }
   if (exists("otherdata5") & !is.null(otherdata5)) {
-    yother5 <- otherdata5[, pos.y]
     nother5 <- dim(otherdata5)[1]
   }
   if (exists("otherdata6") & !is.null(otherdata6)) {
-    yother6 <- otherdata6[, pos.y]
     nother6 <- dim(otherdata6)[1]
   }
 
   if (y.type == "zero/one") {
     yt <- 2 * y - 1
-    yt.valid <- 2 * yvalid - 1
   } # transform the {0,1} dependent variable into a {-1,+1}
   if (y.type == "-one/one") {
     yt <- y
-    yt.valid <- yvalid
   }
 
   p1 <- mean((yt + 1) / 2)
@@ -297,7 +288,7 @@ sgb.loss <- function(
   }
 
   LLval <- c()
-  # LLval.valid = c()
+  # Commented out: LLval.valid = c()
   maxlift.convergence.valid <- targetsize.convergence.valid <- c()
 
 
@@ -314,7 +305,6 @@ sgb.loss <- function(
   my.form <- stats::as.formula("grad ~ .")
 
   iter <- 1
-  plot.count <- 0
   converged <- 100
   set.seed(10)
 
@@ -409,8 +399,7 @@ sgb.loss <- function(
     xhelp <- data.frame(u$var, gaindev)
 
     Importance.temp <- array(NA, c(nvar, 1))
-    for (i in (1:nvar))
-    {
+    for (i in (1:nvar)) {
       loglist <- (xhelp[, 1] == Importancename[i])
       # importance per variable
       Importance.temp[i] <- sum(xhelp[loglist, 2])
@@ -423,7 +412,9 @@ sgb.loss <- function(
     # Predict the node where an observation falls into:
 
     # in the full training set
-    treetrainselected <- stats::predict(knodetree, data.train[sub, ], type = "where")
+    treetrainselected <- stats::predict(knodetree,
+                                        data.train[sub, ],
+                                        type = "where")
     # in the full training set
     treetrain <- stats::predict(knodetree, data.train, type = "where")
     # in the validation set
@@ -526,9 +517,8 @@ sgb.loss <- function(
     # vector of length kk
     gamma <- array(0, c(kk, 1))
 
-    for (k in 1:kk)
     # each node separately
-    {
+    for (k in 1:kk) {
       diff <- 1
       # position of observations taken in the subsample and falling at node k
       ytk <- yt[sub * indice[k, ]]
@@ -642,7 +632,7 @@ sgb.loss <- function(
       }
       # gamma = difference between latest fm (updated)& first fm
       a <- fmk - fmkold
-      # gamma[k]=gammak
+      # commented out; gamma[k]=gammak
       gamma[k] <- a[1]
 
     } ### End Newton-Raphson

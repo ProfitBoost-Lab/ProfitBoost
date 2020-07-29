@@ -7,13 +7,7 @@ Managing Churn to Optimize Profits, Marketing Science.
 Installation
 ------------
 
-To install ProfitBoost from CRAN (as soon as it is available there):
-
-```R
-install.packages('ProfitBoost')
-```
-
-To install the development version (requires the "devtools" package):
+To install the GitHub version (requires the "devtools" package):
 
 ```R
 install.packages("devtools")
@@ -27,4 +21,10 @@ install.packages("devtools")
 devtools::install_deps(dependencies = TRUE)
 devtools::build()
 devtools::reload()
+```
+
+To install ProfitBoost from CRAN (as soon as available there):
+
+```R
+install.packages('ProfitBoost')
 ```

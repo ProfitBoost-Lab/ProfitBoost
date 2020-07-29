@@ -26,11 +26,11 @@
 #' @param rho      rho hyperparameter SGB     (default: .001)
 #' @param stoch    stoch hyperparameter SGB   (default: TRUE)
 #' @param ratio    ratio hyperparameter SGB   (default: .3)
-#' @param m0.train non-targeted margin scores reordered classic loss train sample
+#' @param m0.train nontargeted margin scores reordered classic loss train sample
 #' @param m1.train targeted margin scores reordered classic loss train sample
-#' @param m0.valid non-targeted margin scores reordered classic loss valid sample
+#' @param m0.valid nontargeted margin scores reordered classic loss valid sample
 #' @param m1.valid targeted margin scores reordered classic loss valid sample
-#' @param m0.test  non-targeted margin scores reordered classic loss test sample
+#' @param m0.test  nontargeted margin scores reordered classic loss test sample
 #' @param m1.test  targeted margin scores reordered classic loss test sample
 #' @param verbose  verbose output (default: TRUE)
 #'

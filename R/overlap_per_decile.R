@@ -34,8 +34,9 @@ overlap.per.decile <- function(score1,
 
   for (decile in 1:splitn) {
     decile.index <- 1:(decile * n)
-    overlap <- c(overlap, length(intersect(index1[decile.index], index2[decile.index])) /
-      length(decile.index))
+    overlap <- c(overlap,
+                 length(intersect(index1[decile.index], index2[decile.index])) /
+                          length(decile.index))
   }
 
   if (plot == TRUE) {

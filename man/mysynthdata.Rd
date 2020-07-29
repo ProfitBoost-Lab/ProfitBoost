@@ -20,7 +20,9 @@ A data frame with 200 rows and 14 variables:
 \item{\code{x10}}{integer covariate 10}
 \item{\code{x11}}{integer covariate 11}
 \item{\code{y}}{integer post-intervention churn (0/1)}
-\item{\code{revenues}}{double post-intervention cash flows ("m" in the "Managing Churn to Maximize Profits" manuscript)}
+\item{\code{revenues}}{double post-intervention cash flows
+("m" in the "Managing Churn to Maximize Profits"
+manuscript)}
 }
 }
 \usage{

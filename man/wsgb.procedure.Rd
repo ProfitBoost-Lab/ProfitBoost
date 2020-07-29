@@ -69,15 +69,15 @@ when computing optimal target size}
 
 \item{ratio}{ratio hyperparameter SGB   (default: .3)}
 
-\item{m0.train}{non-targeted margin scores reordered classic loss train sample}
+\item{m0.train}{nontargeted margin scores reordered classic loss train sample}
 
 \item{m1.train}{targeted margin scores reordered classic loss train sample}
 
-\item{m0.valid}{non-targeted margin scores reordered classic loss valid sample}
+\item{m0.valid}{nontargeted margin scores reordered classic loss valid sample}
 
 \item{m1.valid}{targeted margin scores reordered classic loss valid sample}
 
-\item{m0.test}{non-targeted margin scores reordered classic loss test sample}
+\item{m0.test}{nontargeted margin scores reordered classic loss test sample}
 
 \item{m1.test}{targeted margin scores reordered classic loss test sample}
 

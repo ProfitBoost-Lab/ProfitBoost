@@ -42,11 +42,11 @@ sgb.loss(
 )
 }
 \arguments{
-\item{data.train}{training dataset}
+\item{data.train}{training data set}
 
-\item{data.valid}{validation dataset}
+\item{data.valid}{validation data set}
 
-\item{data.test}{test dataset}
+\item{data.test}{test data set}
 
 \item{otherdata1}{other data used for the reordered classic loss, 1}
 
@@ -108,15 +108,18 @@ iteration}
 calculating optimal campaign profit at each
 iteration}
 
-\item{m0.train}{nontargeted margin scores reordered classic loss train sample}
+\item{m0.train}{non-targeted margin scores reordered classic
+loss train sample}
 
 \item{m1.train}{targeted margin scores reordered classic loss train sample}
 
-\item{m0.valid}{nontargeted margin scores reordered classic loss valid sample}
+\item{m0.valid}{non-targeted margin scores reordered classic loss
+validation sample}
 
-\item{m1.valid}{targeted margin scores reordered classic loss valid sample}
+\item{m1.valid}{targeted margin scores reordered classic loss
+validation sample}
 
-\item{m0.test}{nontargeted margin scores reordered classic loss test sample}
+\item{m0.test}{non-targeted margin scores reordered classic loss test sample}
 
 \item{m1.test}{targeted margin scores reordered classic loss test sample}
 

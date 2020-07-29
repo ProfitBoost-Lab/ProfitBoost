@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
 ```{r setup, include=FALSE}
 
 # if one wants to re-run the code:
-#source('demo/main_demo.R')
+#source('demo/replication_paper_2020.R')
 
 # if one only wants to print the results of the code that already ran
 load('../inst/extdata/results.RData', verbose = T)

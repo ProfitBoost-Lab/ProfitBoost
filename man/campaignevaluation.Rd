@@ -31,7 +31,8 @@ campaignevaluation(
 
 \item{opttargetperc}{vector of length k of given target size for each method}
 
-\item{increment}{share of customers added to target size, if "unit", customers are added one by one}
+\item{increment}{share of customers added to target size, if "unit",
+customers are added one by one}
 
 \item{plot}{whether the campaign profit curve should be plotted}
 }

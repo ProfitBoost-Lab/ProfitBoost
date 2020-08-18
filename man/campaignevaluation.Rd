@@ -2,7 +2,7 @@
 % Please edit documentation in R/campaign_evaluation.R
 \name{campaignevaluation}
 \alias{campaignevaluation}
-\title{SGB with user-defined loss function}
+\title{Generate Campaign Profit Curve}
 \usage{
 campaignevaluation(
   y,
@@ -17,42 +17,39 @@ campaignevaluation(
 )
 }
 \arguments{
-\item{y}{post-intervention churn}
+\item{y}{post-intervention churn (binary vector of length n, 0/1)}
 
-\item{treated}{whether the customer is treated}
+\item{treated}{whether the customer is treated (binary vector of length n, 0/1)}
 
-\item{scores}{estimated scores}
+\item{scores}{estimated scores (vector of length n) provided by a model, e.g. profit-based SGB)}
 
-\item{m}{post-intervention cash flow}
+\item{m}{post-intervention cash flow (vector of length n)}
 
-\item{delta}{intervention cost}
+\item{delta}{intervention cost (numeric)}
 
-\item{conditional}{whether the offer is conditional on renewal}
+\item{conditional}{whether the offer is conditional on renewal (logical)}
 
-\item{opttargetperc}{vector of length k of given target size for each method}
+\item{opttargetperc}{selected target size, in percentage}
 
-\item{increment}{share of customers added to target size, if "unit",
+\item{increment}{fraction of customers added to target size when generating the profit curve, if "unit",
 customers are added one by one}
 
-\item{plot}{whether the campaign profit curve should be plotted}
+\item{plot}{whether the campaign profit curve should be plotted (logical)}
 }
 \value{
-A list containing holdout campaign profit at optimal target size
-(as determined from the validation sample), campaign profit curve
-on the test sample, range of target sizes, and
-the optimal target size determined on the validation sample.
+A list containing the campaign profit at target size "opttargetperc", the campaign profit curve, the range of target sizes, and
+the number of customers targeted (as requested by "opttargetperc").
 
 \itemize{
-\item campaign.evaluation
-\item campaign.profit.curve
-\item target.sizes
-\item targetsize.maxprofit
+\item campaign.evaluation: campaign profit at target size "opttargetperc"
+\item campaign.profit.curve: campaign profit value for each target size (given by target.sizes)
+\item target.sizes: set of target sizes at which the campaign profit curve is calculated
+\item targetsize.maxprofit: selected target size (in units, as request by "opttargetperc").
 }
 }
 \description{
-SGB with user-defined loss function
+This function calculates the campaign profit at a given target size based on the estimated scores. It also returns the campaign profit curve for all possible target sizes (from 0% to 100%)
 }
 \details{
-Calculate the (profit) lift for a given target size
-based on the estimated scores
+Calculate the campaign profit at a given target size based on the estimated scores
 }

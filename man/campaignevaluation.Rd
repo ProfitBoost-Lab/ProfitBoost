@@ -48,8 +48,8 @@ the number of customers targeted (as requested by "opttargetperc").
 }
 }
 \description{
-This function calculates the campaign profit at a given target size based on the estimated scores. It also returns the campaign profit curve for all possible target sizes (from 0% to 100%)
+This function calculates the campaign profit at a given target size based on the estimated scores of n customers. It also returns the campaign profit curve for all possible target sizes (from 0% to 100%)
 }
 \details{
-Calculate the campaign profit at a given target size based on the estimated scores
+Calculate the campaign profit at a given target size based on the estimated scores for n customers
 }

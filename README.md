@@ -3,6 +3,7 @@
 This project estimates the profit lift of targeted interventions and optimize 
 their profitability. It is based on the article Lemmens and Gupta (2020), 
 Managing Churn to Optimize Profits, Marketing Science.
+The paper can be downloaded here : https://pubsonline.informs.org/doi/10.1287/mksc.2020.1229
 
 Installation
 ------------

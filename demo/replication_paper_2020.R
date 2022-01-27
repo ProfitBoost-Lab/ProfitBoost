@@ -14,22 +14,23 @@ library(ProfitBoost)
 # revenues = post-intervention cash flow
 
 # load data
-load("data/mysynthdata.rda")
+# load("data/mysynthdata.rda") # DEPRECATED
+data("mysynthdata")
 
 # data specification
 colnumbers.covariates <- 2:12 # indicates the position of all predictors
-                              # excluding w (excludes w, y and revenues)
+# excluding w (excludes w, y and revenues)
 pos.covariates        <- 1:12 # indicates the position (column number)
-                              # of all predictors including w
-                              # (excludes w, y and revenues)
+# of all predictors including w
+# (excludes w, y and revenues)
 pos.y                 <- 13   # indicates the position (column number)
-                              # of y in the data set
+# of y in the data set
 delta                 <- 12   # intervention cost
 conditional           <- TRUE # type of offer
 increment             <- .02  # granularity level to determine optimal
-                              # campaign size
+# campaign size
 budget                <- 1000 # budget to determine target size using budget
-                              # constraint
+# constraint
 buffer                <- .10  # add buffer of 10% to optimized target size
 
 # hyperparameters for the SGB algorithm
@@ -81,15 +82,16 @@ suppressWarnings(RNGkind(sample.kind = "Rounding"))
 
 # start bootstrapping procedure:
 
+ini0 <- Sys.time()
 for (b in 1:B) {
-  print(b)
-
+  # print(b)
+  
   #-----------------------------------------#
   # Uplift Models for Retention and Margins #
   #-----------------------------------------#
-
+  
   print("Estimating Uplift Model")
-
+  
   # 1. estimate model on calibration sample, and make predictions
   # for all observations
   myliftproc <- lift.procedure(
@@ -99,7 +101,8 @@ for (b in 1:B) {
     delta = delta,
     conditional = conditional
   )
-
+  cat('Uplift Models for Retention and Margins \n END STEP #1, ITERATION ', b, ' OF ', B, '\n')
+  
   # 2. optimize target size in the validation sample
   # result: optimal target size, in percentage
   targetsize.mylift.valid <- targetsizeoptimization(
@@ -112,7 +115,8 @@ for (b in 1:B) {
     increment = increment,
     plot = FALSE
   )$targetsize.maxprofit.trimmed / length(myliftproc$valid.data$y)
-
+  cat('Uplift Models for Retention and Margins \n END STEP #2, ITERATION ', b, ' OF ', B, '\n')
+  
   # 3. evaluate campaign profit on the holdout test sample
   myeval.myliftmodel <- campaignevaluation(
     y = myliftproc$test.data$y,
@@ -125,37 +129,43 @@ for (b in 1:B) {
     increment = increment,
     plot = TRUE
   )
-
+  
   # holdout campaign profit at optimized target size # TABLE 1
   holdoutprofit[b, 1] <- myeval.myliftmodel$campaign.evaluation
-
+  
   # campaign profit curve on the test sample # FIGURE 2
   holdoutcampaign.profit.curve.myliftmodel[b, ] <-
     myeval.myliftmodel$campaign.profit.curve
+  cat('Uplift Models for Retention and Margins \n END STEP #3, ITERATION ', b, ' OF ', B, '\n')
+  
+  cat('Uplift Models for Retention and Margins \n NO STEP #4, ITERATION ', b, ' OF ', B, '\n')
 
+    
   # 5. Calculate Holdout Gini Coefficient and Top Decile Lift
   holdoutgini[b, 1] <-
     gini(y = myliftproc$test.data$y, p = myliftproc$rmlift.test)
-
+  
   holdouttdl[b, 1] <- top(
     y = myliftproc$test.data$y,
     p = myliftproc$rmlift.test,
     share = .1
   )
-
+  cat('Uplift Models for Retention and Margins \n END STEP #5, ITERATION ', b, ' OF ', B, '\n')
+  gc()
+  
   #-------------------#
   # Classic SGB model #
   #-------------------#
-
+  
   print("Estimating SGB with classic loss")
-
+  
   # 1. estimate w-sgb on calibration sample and make predictions on
   # all three samples
   mysgbproc <- wsgb.procedure(
     myseed = b,
     mydata = mysynthdata,
     pos.covariates = pos.covariates,
-    pos.y = pos.y,
+    # pos.y = pos.y, # DEPRECATED
     delta = delta,
     conditional = conditional,
     loss = "classic",
@@ -180,7 +190,8 @@ for (b in 1:B) {
     m1.test = myliftproc$m0.test,
     verbose = TRUE
   )
-
+  cat('Classic SGB model \n END STEP #1, ITERATION ', b, ' OF ', B, '\n')
+  
   # 2. optimize target size in the validation sample
   # result: optimal target size, in percentage
   targetsize.sgb.valid <- targetsizeoptimization(
@@ -193,7 +204,8 @@ for (b in 1:B) {
     increment = increment,
     plot = FALSE
   )$targetsize.maxprofit.trimmed / length(mysgbproc$valid.data$y)
-
+  cat('Classic SGB model \n END STEP #2, ITERATION ', b, ' OF ', B, '\n')
+  
   # 3. evaluate campaign profit on the holdout test sample
   myeval.mysgbmodel <- campaignevaluation(
     y = mysgbproc$test.data$y,
@@ -206,23 +218,30 @@ for (b in 1:B) {
     increment = increment,
     plot = TRUE
   )
+  
   # holdout campaign profit at optimized target size # TABLE 1
   holdoutprofit[b, 2] <- myeval.mysgbmodel$campaign.evaluation
-
+  
   # campaign profit curve on the test sample # FIGURE 2
   holdoutcampaign.profit.curve.mysgbmodel[b, ] <-
     myeval.mysgbmodel$campaign.profit.curve
-
+  cat('Classic SGB model \n END STEP #3, ITERATION ', b, ' OF ', B, '\n')
+  
+  cat('Classic SGB model \n NO STEP #4, ITERATION ', b, ' OF ', B, '\n')
+  
   # 5. Calculate Holdout Gini Coefficient and Top Decile Lift
   holdoutgini[b, 2] <-
     gini(y = mysgbproc$test.data$y, p = mysgbproc$scores.test)
-
+  
   holdouttdl[b, 2] <- top(
     y = mysgbproc$test.data$y,
     p = mysgbproc$scores.test,
     share = .1
   )
-
+  cat('Classic SGB model \n END STEP #5, ITERATION ', b, ' OF ', B, '\n')
+  gc()
+  
+  
   #-----------------------------#
   # Classic reordered SGB model #
   #-----------------------------#
@@ -233,7 +252,7 @@ for (b in 1:B) {
     myseed = b,
     mydata = mysynthdata,
     pos.covariates = pos.covariates,
-    pos.y = pos.y,
+    # pos.y = pos.y, # DEPRECATED
     delta = delta,
     conditional = conditional,
     loss = "classic",
@@ -258,7 +277,8 @@ for (b in 1:B) {
     m1.test = myliftproc$m0.test,
     verbose = TRUE
   )
-
+  cat('Classic reordered SGB model \n END STEP #1, ITERATION ', b, ' OF ', B, '\n')
+  
   # 2. optimize target size in the validation sample
   # result: optimal target size, in percentage
   targetsize.rsgb.valid <- targetsizeoptimization(
@@ -271,7 +291,8 @@ for (b in 1:B) {
     increment = increment,
     plot = FALSE
   )$targetsize.maxprofit.trimmed / length(myrsgbproc$valid.data$y)
-
+  cat('Classic reordered SGB model \n END STEP #2, ITERATION ', b, ' OF ', B, '\n')
+  
   # 3. evaluate campaign profit on the holdout test sample
   myeval.myrsgbmodel <- campaignevaluation(
     y = myrsgbproc$test.data$y,
@@ -284,14 +305,17 @@ for (b in 1:B) {
     increment = increment,
     plot = TRUE
   )
-
+  
   # holdout campaign profit at optimized target size # TABLE 1
   holdoutprofit[b, 3] <- myeval.myrsgbmodel$campaign.evaluation
-
+  
   # campaign profit curve on the test sample # FIGURE 2
   holdoutcampaign.profit.curve.myrsgbmodel[b, ] <-
     myeval.myrsgbmodel$campaign.profit.curve
-
+  cat('Classic reordered SGB model \n END STEP #3, ITERATION ', b, ' OF ', B, '\n')
+  
+  cat('Classic reordered SGB model \n NO STEP #4, ITERATION ', b, ' OF ', B, '\n')
+  
   # 5. Calculate Holdout Gini Coefficient and Top Decile Lift
   holdoutgini[b, 3] <- gini(y = myrsgbproc$test.data$y,
                             p = myrsgbproc$scores.test)
@@ -300,20 +324,23 @@ for (b in 1:B) {
     p = myrsgbproc$scores.test,
     share = .1
   )
-
+  cat('Classic reordered SGB model \n END STEP #5, ITERATION ', b, ' OF ', B, '\n')
+  gc()
+  
+  
   #-----------------------------------#
   # Profit wSGB model, left weighting #
   #-----------------------------------#
-
+  
   print("Estimating wSGB with left weighting")
-
+  
   # 1. estimate w-sgb on calibration sample and make predictions on
   # all three samples
   mywsgbproc <- wsgb.procedure(
     myseed = b,
     mydata = mysynthdata,
     pos.covariates = pos.covariates,
-    pos.y = pos.y,
+    # pos.y = pos.y, # DEPRECATED
     delta = delta,
     conditional = conditional,
     loss = "left weighting",
@@ -338,7 +365,8 @@ for (b in 1:B) {
     m1.test = myliftproc$m0.test,
     verbose = TRUE
   )
-
+  cat('Profit wSGB model, left weighting \n END STEP #1, ITERATION ', b, ' OF ', B, '\n')
+  
   # 2. optimize target size in the validation sample
   # result: optimal target size, in percentage
   targetsize.wsgb.valid <- targetsizeoptimization(
@@ -351,7 +379,8 @@ for (b in 1:B) {
     increment = increment,
     plot = FALSE
   )$targetsize.maxprofit.trimmed / length(mywsgbproc$valid.data$y)
-
+  cat('Profit wSGB model, left weighting \n END STEP #2, ITERATION ', b, ' OF ', B, '\n')
+  
   # 3. evaluate campaign profit on the holdout test sample
   myeval.mywsgbmodel <- campaignevaluation(
     y = mywsgbproc$test.data$y,
@@ -364,16 +393,17 @@ for (b in 1:B) {
     increment = increment,
     plot = TRUE
   )
-
+  
   # holdout campaign profit at optimized target size # TABLE 1
   holdoutprofit[b, 4] <- myeval.mywsgbmodel$campaign.evaluation
-
+  
   # campaign profit curve on the test sample # FIGURE 2
   holdoutcampaign.profit.curve.mywsgbmodel[b, ] <-
     myeval.mywsgbmodel$campaign.profit.curve
-
+  cat('Profit wSGB model, left weighting \n END STEP #3, ITERATION ', b, ' OF ', B, '\n')
+  
   # 4. alternative target size selections
-
+  
   # 4.1. Fixed target size based on churnrate
   fixedsize.churn[b] <- fixedsizecampaignevaluation(
     y = mywsgbproc$test.data$y,
@@ -385,7 +415,8 @@ for (b in 1:B) {
     fixedsizeperc = mean(mywsgbproc$valid.data$y),
     increment = increment
   )$profit.fixedsize # holdout campaign profit at fixed size # TABLE 2
-
+  cat('Profit wSGB model, left weighting \n END STEP #4.1, ITERATION ', b, ' OF ', B, '\n')
+  
   # 4.2. Fixed target size based on budget constraint
   fixedsize.budget[b] <- fixedsizecampaignevaluation(
     y = mywsgbproc$test.data$y,
@@ -395,10 +426,11 @@ for (b in 1:B) {
     delta = delta,
     conditional = conditional,
     fixedsizeperc = (budget /
-      delta) / length(mywsgbproc$test.data$y),
+                       delta) / length(mywsgbproc$test.data$y),
     increment = increment
   )$profit.fixedsize # holdout campaign profit at fixed size # TABLE 2
-
+  cat('Profit wSGB model, left weighting \n END STEP #4.2, ITERATION ', b, ' OF ', B, '\n')
+  
   # 4.3. Optimized target size based on Verbeke
   targetsize.verbeke <- verbeke(
     y = mywsgbproc$valid.data$y,
@@ -412,7 +444,7 @@ for (b in 1:B) {
     A = 0,
     plot = FALSE
   )$targetsize.maxprofit / length(mywsgbproc$valid.data$y)
-
+  
   optsize.verbeke[b] <- campaignevaluation(
     y = mywsgbproc$test.data$y,
     treated = mywsgbproc$test.data$w,
@@ -424,7 +456,8 @@ for (b in 1:B) {
     increment = increment,
     plot = TRUE
   )$campaign.evaluation
-
+  cat('Profit wSGB model, left weighting \n END STEP #4.3, ITERATION ', b, ' OF ', B, '\n')
+  
   # 4.4. 10% Buffer
   optsize.buffer[b] <- campaignevaluation(
     y = mywsgbproc$test.data$y,
@@ -437,46 +470,52 @@ for (b in 1:B) {
     increment = increment,
     plot = TRUE
   )$campaign.evaluation
-
+  cat('Profit wSGB model, left weighting \n END STEP #4.4, ITERATION ', b, ' OF ', B, '\n')
+  
   # 5. Calculate Holdout Gini Coefficient and Top Decile Lift
-
+  
   holdoutgini[b, 4] <-
     gini(y = mywsgbproc$test.data$y, p = mywsgbproc$scores.test)
-
+  
   holdouttdl[b, 4] <- top(
     y = mywsgbproc$test.data$y,
     p = mywsgbproc$scores.test,
     share = .1
   )
-
+  cat('Profit wSGB model, left weighting \n END STEP #5, ITERATION ', b, ' OF ', B, '\n')
+  gc()
+  
+  
   #------------------------#
   # Overlap between models #
   #------------------------#
-
+  
   overlap.SGB.WSGB[b, ] <-
     overlap.per.decile(mysgbproc$scores.test, mywsgbproc$scores.test, plot = F)
-
+  
   overlap.RSGB.WSGB[b, ] <-
     overlap.per.decile(myrsgbproc$scores.test, mywsgbproc$scores.test, plot = F)
-
+  
   overlap.LIFTrm.WSGB[b, ] <-
     overlap.per.decile(myliftproc$rmlift.test, mywsgbproc$scores.test, plot = F)
-
-
+  
+  cat('Overlap between models \n END UNIQUE STEP, ITERATION ', b, ' OF ', B, '\n')
+  gc()
+  
   #------------------------------------#
   # Profit wSGB model, right weighting #
   #------------------------------------#
-
+  
   print("Estimating wSGB with right weighting")
-
+  
   # 1. estimate w-sgb on calibration sample and
   #    make predictions on all three samples
-
+  
   mywsgbproc2 <- wsgb.procedure(
     myseed = b,
     mydata = mysynthdata,
     pos.covariates = pos.covariates,
-    pos.y = pos.y,
+    # pos.y = pos.y, # DEPRECATED
     delta = delta,
     conditional = conditional,
     loss = "right weighting",
@@ -501,10 +540,11 @@ for (b in 1:B) {
     m1.test = myliftproc$m0.test,
     verbose = TRUE
   )
-
+  cat('Profit wSGB model, right weighting \n END STEP #1, ITERATION ', b, ' OF ', B, '\n')
+  
   # 2. optimize target size in the validation sample
   #    result: optimal target size, in percentage
-
+  
   targetsize.wsgb2.valid <- targetsizeoptimization(
     y = mywsgbproc2$valid.data$y,
     treated = mywsgbproc2$valid.data$w,
@@ -515,9 +555,10 @@ for (b in 1:B) {
     increment = increment,
     plot = FALSE
   )$targetsize.maxprofit.trimmed / length(mywsgbproc2$valid.data$y)
-
+  cat('Profit wSGB model, right weighting \n END STEP #2, ITERATION ', b, ' OF ', B, '\n')
+  
   # 3. evaluate campaign profit on the holdout test sample
-
+  
   myeval.mywsgb2model <- campaignevaluation(
     y = mywsgbproc2$test.data$y,
     treated = mywsgbproc2$test.data$w,
@@ -529,28 +570,29 @@ for (b in 1:B) {
     increment = increment,
     plot = TRUE
   )
-
+  
   # holdout campaign profit at optimized target size # TABLE 1
   holdoutprofit[b, 5] <- myeval.mywsgb2model$campaign.evaluation
-
+  
   # campaign profit curve on the test sample # FIGURE 2
   holdoutcampaign.profit.curve.mywsgb2model[b, ] <-
     myeval.mywsgb2model$campaign.profit.curve
-
-
+  cat('Profit wSGB model, right weighting \n END STEP #3, ITERATION ', b, ' OF ', B, '\n')
+  gc()
+  
   #----------------------------------------#
   # Profit wSGB model, symmetric weighting #
   #----------------------------------------#
-
+  
   print("Estimating wSGB with symmetric weighting")
-
+  
   # 1. estimate w-sgb on calibration sample and make predictions
   # on all three samples
   mywsgbproc3 <- wsgb.procedure(
     myseed = b,
     mydata = mysynthdata,
     pos.covariates = pos.covariates,
-    pos.y = pos.y,
+    # pos.y = pos.y, # DEPRECATED
     delta = delta,
     conditional = conditional,
     loss = "symmetric weighting",
@@ -575,7 +617,8 @@ for (b in 1:B) {
     m1.test = myliftproc$m0.test,
     verbose = TRUE
   )
-
+  cat('Profit wSGB model, symmetric weighting \n END STEP #1, ITERATION ', b, ' OF ', B, '\n')
+  
   # 2. optimize target size in the validation sample
   # result: optimal target size, in percentage
   targetsize.wsgb3.valid <- targetsizeoptimization(
@@ -588,7 +631,8 @@ for (b in 1:B) {
     increment = increment,
     plot = FALSE
   )$targetsize.maxprofit.trimmed / length(mywsgbproc3$valid.data$y)
-
+  cat('Profit wSGB model, symmetric weighting \n END STEP #2, ITERATION ', b, ' OF ', B, '\n')
+  
   # 3. evaluate campaign profit on the holdout test sample
   myeval.mywsgb3model <- campaignevaluation(
     y = mywsgbproc3$test.data$y,
@@ -603,11 +647,16 @@ for (b in 1:B) {
   )
   # holdout campaign profit at optimized target size # TABLE 1
   holdoutprofit[b, 6] <- myeval.mywsgb3model$campaign.evaluation
-
+  
   # campaign profit curve on the test sample # FIGURE 2
   holdoutcampaign.profit.curve.mywsgb3model[b, ] <-
     myeval.mywsgb3model$campaign.profit.curve
-
+  cat('Profit wSGB model, symmetric weighting \n END STEP #3, ITERATION ', b, ' OF ', B, '\n')
+  gc()
+  
+  cat('TIME ELAPSED \n'); Sys.time()-ini0
 } # end of the bootstrapping
+cat('TOTAL TIME \n'); Sys.time()-ini0
 
-save.image("inst/extdata/results.RData", compress = TRUE)
+
+save.image("results.RData"), compress = TRUE)
